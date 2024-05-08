@@ -7,7 +7,7 @@ export default function HomePage({ isLoggedIn, name }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500">
         <div className="p-6 bg-white shadow-lg rounded-lg border border-gray-200">
-        <h1 className="text-4xl font-bold text-gray-800">Welcome!</h1>
+        <h1 className="text-4xl font-bold text-gray-800">Welcome, {name}!</h1>
         </div>
       </div>
     );
@@ -32,6 +32,11 @@ export default function HomePage({ isLoggedIn, name }) {
 export async function getServerSideProps({ req }) {
   const cookies = parseCookies(req);
   const isLoggedIn = !!cookies.jwt;
+  let name = "";
+  if (isLoggedIn) {
+    const decoded = jwt.verify(cookies.jwt, process.env.JWT_SECRET); 
+    name = decoded.name;
+  }
 
   return {
     props: { isLoggedIn, name },
