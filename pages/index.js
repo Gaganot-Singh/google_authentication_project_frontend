@@ -1,26 +1,39 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { parseCookies } from '../utils/parseCookies';
 import jwt from 'jsonwebtoken';
 
-export default function HomePage({ isLoggedIn, name }) {
+export default function HomePage({ initialIsLoggedIn, initialName }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);
+  const [name, setName] = useState(initialName);
+
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    if (token) {
-      sessionStorage.setItem('jwt', token);
-      window.history.replaceState(null, '', window.location.pathname); // Clean URL
+    if (typeof window !== 'undefined') { // Ensure we are on the client side
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      if (token) {
+        sessionStorage.setItem('jwt', token);
+        window.history.replaceState(null, '', window.location.pathname); // Clean URL
+
+        try {
+          const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET);
+          setName(decoded.name);
+          setIsLoggedIn(true);
+        } catch (error) {
+          console.error('Token verification failed:', error);
+        }
+      } else if (sessionStorage.getItem('jwt')) {
+        try {
+          const decoded = jwt.verify(sessionStorage.getItem('jwt'), process.env.NEXT_PUBLIC_JWT_SECRET);
+          setName(decoded.name);
+          setIsLoggedIn(true);
+        } catch (error) {
+          console.error('Token verification failed:', error);
+        }
+      }
     }
   }, []);
 
-  if (isLoggedIn || sessionStorage.getItem('jwt')) {
-    if (!name && sessionStorage.getItem('jwt')) {
-      try {
-        const decoded = jwt.verify(sessionStorage.getItem('jwt'), process.env.JWT_SECRET);
-        name = decoded.name;
-      } catch (error) {
-        console.error('Token verification failed:', error);
-      }
-    }
+  if (isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500">
         <div className="p-6 bg-white shadow-lg rounded-lg border border-gray-200">
@@ -47,12 +60,11 @@ export default function HomePage({ isLoggedIn, name }) {
 
 export async function getServerSideProps({ req }) {
   const cookies = parseCookies(req);
-  const isLoggedIn = !!cookies.jwt || !!sessionStorage.getItem('jwt');
+  const isLoggedIn = !!cookies.jwt;
   let name = "";
   if (isLoggedIn) {
     try {
-      const token = cookies.jwt || sessionStorage.getItem('jwt');
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(cookies.jwt, process.env.JWT_SECRET);
       name = decoded.name;
     } catch (error) {
       console.error('Token verification failed:', error);
@@ -60,6 +72,6 @@ export async function getServerSideProps({ req }) {
   }
 
   return {
-    props: { isLoggedIn, name },
+    props: { initialIsLoggedIn: isLoggedIn, initialName: name },
   };
 }
