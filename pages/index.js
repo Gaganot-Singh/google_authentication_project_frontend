@@ -10,8 +10,10 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
     if (typeof window !== 'undefined') { // Ensure we are on the client side
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get('token');
+      console.log(token)
       if (token) {
         sessionStorage.setItem('jwt', token);
+        setIsLoggedIn(true);
         // window.history.replaceState(null, '', window.location.pathname); // Clean URL
 
       //   try {
