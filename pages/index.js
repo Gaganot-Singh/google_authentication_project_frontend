@@ -9,27 +9,13 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
     if (typeof window !== 'undefined') { // Ensure we are on the client side
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get('token');
-      console.log(token)
+      const name = urlParams.get('name');
+      setName(name);
       if (token) {
         sessionStorage.setItem('jwt', token);
+        sessionStorage.setItem('name', name);
         setIsLoggedIn(true);
-        // window.history.replaceState(null, '', window.location.pathname); // Clean URL
-
-      //   try {
-      //     const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET);
-      //     setName(decoded.name);
-      //     setIsLoggedIn(true);
-      //   } catch (error) {
-      //     console.error('Token verification failed:', error);
-      //   }
-      // } else if (sessionStorage.getItem('jwt')) {
-      //   try {
-      //     const decoded = jwt.verify(sessionStorage.getItem('jwt'), process.env.NEXT_PUBLIC_JWT_SECRET);
-      //     setName(decoded.name);
-      //     setIsLoggedIn(true);
-      //   } catch (error) {
-      //     console.error('Token verification failed:', error);
-      //   }
+        window.history.replaceState(null, '', window.location.pathname); // Clean URL
       }
     }
   }, []);
