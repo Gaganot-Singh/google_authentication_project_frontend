@@ -9,10 +9,16 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
     if (typeof window !== 'undefined') { // Ensure we are on the client side
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get('token');
+<<<<<<< HEAD
       console.log('Environment Variable:', process.env.NEXT_PUBLIC_JWT_SECRET); // Log the secret to verify
       if (token) {
         sessionStorage.setItem('jwt', token);
         window.history.replaceState(null, '', window.location.pathname); // Clean URL
+=======
+      if (token) {
+        sessionStorage.setItem('jwt', token);
+        // window.history.replaceState(null, '', window.location.pathname); // Clean URL
+>>>>>>> parent of 4ac0511 (state upgrade correction)
 
         try {
           const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET);
