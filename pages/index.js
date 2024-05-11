@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import jwt from 'jsonwebtoken';
 
 export default function HomePage({ initialIsLoggedIn, initialName }) {
   const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);
@@ -30,7 +29,7 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
   if (isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500">
-        <div className="p-6 bg-white shadow-lg rounded-lg border border-gray-200">
+        <div className="p-6 bg-white shadow-lg rounded-lg border border-gray-200 items-center justify-center flex flex-col">
           <h1 className="text-4xl font-bold text-gray-800">Welcome, {name}!</h1>
           <button 
             onClick={handleLogout} 
