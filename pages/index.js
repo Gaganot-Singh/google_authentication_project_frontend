@@ -9,6 +9,7 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
     if (typeof window !== 'undefined') { // Ensure we are on the client side
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get('token');
+      console.log('Environment Variable:', process.env.NEXT_PUBLIC_JWT_SECRET); // Log the secret to verify
       if (token) {
         sessionStorage.setItem('jwt', token);
         window.history.replaceState(null, '', window.location.pathname); // Clean URL
