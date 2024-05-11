@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { parseCookies } from '../utils/parseCookies';
 import jwt from 'jsonwebtoken';
 
 export default function HomePage({ initialIsLoggedIn, initialName }) {
@@ -15,7 +14,7 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
         window.history.replaceState(null, '', window.location.pathname); // Clean URL
 
         try {
-          const decoded = jwt.verify(token, process.env.JWT_SECRET);
+          const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET);
           setName(decoded.name);
           setIsLoggedIn(true);
         } catch (error) {
@@ -23,7 +22,7 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
         }
       } else if (sessionStorage.getItem('jwt')) {
         try {
-          const decoded = jwt.verify(sessionStorage.getItem('jwt'), process.env.JWT_SECRET);
+          const decoded = jwt.verify(sessionStorage.getItem('jwt'), process.env.NEXT_PUBLIC_JWT_SECRET);
           setName(decoded.name);
           setIsLoggedIn(true);
         } catch (error) {
@@ -59,18 +58,8 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
 }
 
 export async function getServerSideProps({ req }) {
-  const cookies = parseCookies(req);
-  const isLoggedIn = !!cookies.jwt;
+  const isLoggedIn = false;
   let name = "";
-  if (isLoggedIn) {
-    try {
-      const decoded = jwt.verify(cookies.jwt, process.env.JWT_SECRET);
-      name = decoded.name;
-    } catch (error) {
-      console.error('Token verification failed:', error);
-    }
-  }
-
   return {
     props: { initialIsLoggedIn: isLoggedIn, initialName: name },
   };
