@@ -15,7 +15,7 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
         window.history.replaceState(null, '', window.location.pathname); // Clean URL
 
         try {
-          const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET);
+          const decoded = jwt.verify(token, process.env.JWT_SECRET);
           setName(decoded.name);
           setIsLoggedIn(true);
         } catch (error) {
@@ -23,7 +23,7 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
         }
       } else if (sessionStorage.getItem('jwt')) {
         try {
-          const decoded = jwt.verify(sessionStorage.getItem('jwt'), process.env.NEXT_PUBLIC_JWT_SECRET);
+          const decoded = jwt.verify(sessionStorage.getItem('jwt'), process.env.JWT_SECRET);
           setName(decoded.name);
           setIsLoggedIn(true);
         } catch (error) {
