@@ -52,7 +52,7 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
         <ul class="list-disc list-inside text-gray-700 mb-4">
             <li>Google OAuth integration</li>
             <li>Secure JWT authentication</li>
-            <li>Session management</li>
+            <li>Automated email feature for enhanced communication</li>
             <li>User data handling with MongoDB</li>
             <li>Logout functionality</li>
         </ul>
