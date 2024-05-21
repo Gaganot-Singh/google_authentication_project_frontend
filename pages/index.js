@@ -28,7 +28,7 @@ export default function HomePage({ initialIsLoggedIn, initialName }) {
     window.location.href = '/';
   };
 
-  if (!isLoggedIn) {
+  if (isLoggedIn) {
     return (
       <>
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500 flex-col">
